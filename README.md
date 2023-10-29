@@ -34,6 +34,21 @@ We stored the coordinates of the detected circles in an array. If the circle is 
 
 https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/eba978f1-0901-42a1-bbad-8e76ce6e5ed7
 
+## Detect wrinkles:
+Another challenge is to detect wrinkles in stickers. We are working on using houghLineDetection to find lines during the live stream. We plan to compare the coordinates of the lines found to see if they are inside any of the circles. If the lines are in the circles, the value of a boolean variable “inLine” will change and a "wrinkled" label will display on the screen. Currently, our program is able to find a list of the central coordinates of the wrinkles in the live stream.
+
+Input:
+
+![Screenshot (39)](https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/906920d2-fa30-4415-a21d-3ddbde63004b)
+
+Output:
+
+![Screenshot (40)](https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/27cd1147-e32e-4cb9-be96-527a8508dc01)
+
+Coordinates:
+
+[384.5, 414.0]
+
 ## Evaluation:
 
 Our approach and scope changed throughout the challenge. We began by using filters and color space changes to identify the circles. We then switched to the Hough Circle Transform which worked adequately for single test images but could not be generalized without tuning its parameters. Our current solution leverages point and shape detection along with checking the size of the stickers to determine if we are looking at a hole, sticker, or partially covered hole. We are also attempting to solve the problem using YoloV5 and a Neural Network to recognize stickers. However, this requires a lot of training images. While our current solution works well, if we were to undertake this project again, we would work with a neural network from the start. It would serve as a more general solution and could be continually improved on by creating more layers and more training data.
