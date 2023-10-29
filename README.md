@@ -49,6 +49,10 @@ Coordinates:
 
 [384.5, 414.0]
 
+Live stream test:
+
+![Screenshot (42)](https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/66042635-b969-413f-83ae-7b4d3151286f)
+
 ## Evaluation:
 
 Our approach and scope changed throughout the challenge. We began by using filters and color space changes to identify the circles. We then switched to the Hough Circle Transform which worked adequately for single test images but could not be generalized without tuning its parameters. Our current solution leverages point and shape detection along with checking the size of the stickers to determine if we are looking at a hole, sticker, or partially covered hole. We are also attempting to solve the problem using YoloV5 and a Neural Network to recognize stickers. However, this requires a lot of training images. While our current solution works well, if we were to undertake this project again, we would work with a neural network from the start. It would serve as a more general solution and could be continually improved on by creating more layers and more training data.
