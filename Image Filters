@@ -1,0 +1,86 @@
+import os
+import sys
+
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+import cv2
+import ipywidgets as widgets
+from ipywidgets import interact, interact_manual
+
+from IPython.display import display, Javascript, Image
+
+from google.colab.output import eval_js
+from base64 import b64decode, b64encode
+import PIL
+import io
+import html
+import time
+
+def pointDetector(path_to_img, output_path):
+    img = cv2.imread(path_to_img)
+    kernel = np.float32([[-1,-1,-1],[-1,14,-1],[-1,-1,-1]])
+    img_out = cv2.filter2D(img,-1,kernel)
+    plt.figure(figsize=(20, 10))
+    plt.subplot(121), plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)), plt.title('Original Image', color='c')
+    plt.subplot(122), plt.imshow(cv2.cvtColor(img_out, cv2.COLOR_BGR2RGB)), plt.title('Filtered Image', color='c')
+    plt.show()
+    cv2.imwrite(output_path, img_out)
+
+    return img_out
+
+def houghCircleDetector(path_to_img):
+    img = cv2.imread(path_to_img)
+    img = cv2.medianBlur(img,5)
+    img_edge = cv2.Canny(img,150,210)
+
+    circles = cv2.HoughCircles(img_edge,cv2.HOUGH_GRADIENT,1,minDist=20,param1=180,param2=30)
+    circles = np.uint16(np.around(circles))
+    sum = 0
+    counter = 0
+    for val in circles[0,:]:
+      sum = sum + val[2]
+      counter = counter + 1
+    average = sum/counter
+    for val in circles[0,:]:
+        if val[2] < average:
+          cv2.circle(img,(val[0],val[1]),val[2],(255,0,0),2)
+
+    plt.figure(figsize=(20,10))
+    plt.subplot(121),plt.imshow(cv2.cvtColor(img_edge,cv2.COLOR_BGR2RGB)),plt.title('Input',color='c')
+    plt.subplot(122),plt.imshow(cv2.cvtColor(img,cv2.COLOR_BGR2RGB)),plt.title('Result',color='c')
+    plt.show()
+    print(circles)
+    return
+
+def detectShapes(img_path):
+    img = cv2.imread(img_path,cv2.IMREAD_GRAYSCALE)
+    img = cv2.medianBlur(img,5)
+    _,img_Otsubin = cv2.threshold(img,180,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    contours,_ = cv2.findContours(img_Otsubin.copy(),1,2)
+    for num,cnt in enumerate(contours):
+        x,y,w,h = cv2.boundingRect(cnt)
+        approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
+        if len(approx) > 10:
+            cv2.putText(img,"Circle",(int(x+w/2),int(y+h/2)),cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
+            cv2.drawContours(img,[cnt],-1,(0,255,0),2)
+
+    plt.figure(figsize=(20,10))
+    plt.subplot(131),plt.imshow(cv2.cvtColor(img_Otsubin,cv2.COLOR_BGR2RGB)),plt.title('Input',color='c')
+    plt.subplot(132),plt.imshow(cv2.cvtColor(img,cv2.COLOR_BGR2RGB)),plt.title('Result')
+    plt.show()
+    return
+
+path_to_img = 'Metal_1.jpg'
+image = cv2.imread('Metal_1.jpg')
+#resized_image = cv2.resize(image, (800, 400))
+#cv2.imwrite('resized_image.jpg', resized_image)
+
+#resize = 'resized_image.jpg'
+pointDetector(path_to_img, 'filtered_image.jpg')
+
+filtered = 'filtered_image.jpg'
+
+houghCircleDetector(filtered)
+
+
