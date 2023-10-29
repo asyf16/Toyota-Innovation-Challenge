@@ -1,0 +1,77 @@
+# start streaming video from webcam
+video_stream()
+# label for video
+label_html = 'Hole detector'
+# initialze bounding box to empty
+bbox = ''
+count = 0
+radius = []
+
+while True:
+    js_reply = video_frame(label_html, bbox)
+    if not js_reply:
+        break
+    circles = []
+    totlines = []
+    # convert JS response to OpenCV Image
+    img = js_to_image(js_reply["img"])
+    filtered = pointDetector(img, 14)
+    wrinkles = pointDetector(img, 7.5)
+    if len(radius) > 10:
+      max = average + 30
+    else:
+      max = 100
+    detectShapes(filtered, 15, max)
+    houghLineDetector(wrinkles)
+
+    # create transparent overlay for bounding box
+    bbox_array = np.zeros([480,640,4], dtype=np.uint8)
+    # get face bounding box for overlay
+    for i in range(len(circles)):
+      inline = False
+      x = circles[i][0]
+      y = circles[i][1]
+      w = circles[i][2]
+      h = circles[i][3]
+      for i in range(len(totlines)):
+        rad = (w+h)/2
+        if (totlines[i][0]>x)&(totlines[i][0]<x+rad)&(totlines[i][0]>y)&(totlines[i][0]<y+rad):
+          inline = True
+      center_x = x + w // 2
+      center_y = y + h // 2
+      text = "Hole"
+      font = cv2.FONT_HERSHEY_SIMPLEX
+      font_scale = 0.5
+      font_thickness = 1
+      text_size, _ = cv2.getTextSize(text, font, font_scale, font_thickness)
+      text_x = center_x - text_size[0] // 2
+      text_y = center_y + text_size[1] // 2
+      average = sum(radius)/len(radius)
+      if abs(w-h) < 7:
+        '''
+        if inline == True:
+          text = "Wrinkles"
+          bbox_array = cv2.rectangle(bbox_array,(x,y),(x+w,y+h),(255,255,255),2)
+          bbox_array = cv2.putText(bbox_array, text, (text_x, text_y), font, font_scale, (255,255,255), font_thickness)
+        else:
+        '''
+        if (w+h)/2 > average:
+              text = "Sticker"
+              bbox_array = cv2.rectangle(bbox_array,(x,y),(x+w,y+h),(0,255,0),2)
+              bbox_array = cv2.putText(bbox_array, text, (text_x, text_y), font, font_scale, (0,255,0), font_thickness)
+        else:
+              text = "Hole"
+              bbox_array = cv2.rectangle(bbox_array,(x,y),(x+w,y+h),(255,0,0),2)
+              bbox_array = cv2.putText(bbox_array, text, (text_x, text_y), font, font_scale, (255,0,0), font_thickness)
+      else:
+        text = 'Failed'
+        text2 = 'Sticker'
+        bbox_array = cv2.rectangle(bbox_array,(x,y),(x+w,y+h),(0,0,255),2)
+        bbox_array = cv2.putText(bbox_array, text, (text_x, text_y-10), font, font_scale, (0,0,255), font_thickness)
+        bbox_array = cv2.putText(bbox_array, text2, (text_x, text_y+10), font, font_scale, (0,0,255), font_thickness)
+
+    bbox_array[:,:,3] = (bbox_array.max(axis = 2) > 0 ).astype(int) * 255
+    # convert overlay of bbox into bytes
+    bbox_bytes = bbox_to_bytes(bbox_array)
+    # update bbox so next frame gets new overlay
+    bbox = bbox_bytes
