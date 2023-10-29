@@ -1,0 +1,44 @@
+def pointDetector(path_to_img, harshness):
+    img = path_to_img
+    kernel = np.float32([[-1,-1,-1],[-1,harshness,-1],[-1,-1,-1]])
+    img_out = cv2.filter2D(img,-1,kernel)
+    return img_out
+
+def detectShapes(img_path, min, max):
+  img = img_path
+  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  img = cv2.medianBlur(img,5)
+  _,img_Otsubin = cv2.threshold(img,200,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+  contours,_ = cv2.findContours(img_Otsubin.copy(),1,2)
+  coords = []
+  for num,cnt in enumerate(contours):
+      x,y,w,h = cv2.boundingRect(cnt)
+      approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
+      if len(approx) > 8:
+        if (w>min) & (h>min) & (w<max) & (h<max):
+          coords = []
+          coords.append(x)
+          coords.append(y)
+          coords.append(h)
+          coords.append(w)
+          circles.append(coords)
+          rad = (w+h)/2
+          radius.append(rad)
+  return circles
+
+def houghLineDetector(path_to_img):
+    img = path_to_img
+    img_edge = cv2.Canny(img,80,200)
+    lines = cv2.HoughLinesP(img_edge,5,np.pi/180,15,minLineLength=50,maxLineGap=10)
+    if lines is not None and len(lines) > 0:
+      for line in lines:
+        x1,y1,x2,y2 = line[0]
+        centerx = (x1+x2)/2
+        centery=(y1+y2)/2
+        coordsline = []
+        if math.sqrt(pow((x2-x1),2)+pow((y2-y1),2))<100:
+          cv2.line(img,(x1,y1),(x2,y2),(255,0,0),2)
+          coordsline.append(centerx)
+          coordsline.append(centery)
+          totlines.append(coordsline)
+    return
