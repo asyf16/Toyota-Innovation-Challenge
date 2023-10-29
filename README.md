@@ -15,4 +15,25 @@ Toyota is developing a system that will automatically install round stickers ove
 
 We first attempted to write code to find the holes in static images. To do this, we used the houghCircleDetector function in OpenCV to display circles over the holes. After changing the sensitivity parameters of the function, our code managed to find some holes in the image, but either found too many holes or too few holes. 
 
+![Detect Circles](https://github.com/asyf16/Toyota-Innovation-Challenge/blob/2b89e1a95978d776624e5367fa786eb1f981b16c/Pictures/circle.png)
+
+
 We then tried to use the detectShapes function to find the contours of the image. However, the image was too complex and had to be simplified by the pointDetector function, which adds a filter to the image. At this point, our program could find the holes in static images. 
+
+![Filtered](https://github.com/asyf16/Toyota-Innovation-Challenge/blob/2b89e1a95978d776624e5367fa786eb1f981b16c/Pictures/filter.png)
+![Contours](https://github.com/asyf16/Toyota-Innovation-Challenge/blob/2b89e1a95978d776624e5367fa786eb1f981b16c/Pictures/contour.png)
+
+## Live feed:
+After testing our code on static images, we attempted to connect to a live feed camera. Using Python and Java, we processed the output from the live feed and implemented our previous processes on the frames. We first use a point detection filter to simplify the image and then use a shape detection filter to find the holes and stickers. At this point, the program could recognize shapes that are similar to circles. 
+
+![Holes](https://github.com/asyf16/Toyota-Innovation-Challenge/blob/e3bbd591aad2b738c0253d50b681905018f968d4/Pictures/image.png)
+
+## Detect stickers: 
+
+We stored the coordinates of the detected circles in an array. If the circle is not symmetric (the length and width are not the same within the margin of error), it is classified as a failed sticker. This works with a live video and in 3 degrees freedom. We then calculate the average radius of all circles, excluding the failed stickers. Circles with a radius less than the average are classified as a hole.
+
+https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/eba978f1-0901-42a1-bbad-8e76ce6e5ed7
+
+## Evaluation:
+
+Our approach and scope changed throughout the challenge. We began by using filters and color space changes to identify the circles. We then switched to the Hough Circle Transform which worked adequately for single test images but could not be generalized without tuning its parameters. Our current solution leverages point and shape detection along with checking the size of the stickers to determine if we are looking at a hole, sticker, or partially covered hole. We are also attempting to solve the problem using YoloV5 and a Neural Network to recognize stickers. However, this requires a lot of training images. While our current solution works well, if we were to undertake this project again, we would work with a neural network from the start. It would serve as a more general solution and could be continually improved on by creating more layers and more training data.
