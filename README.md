@@ -1,6 +1,10 @@
 # Toyota-Innovation-Challenge
-An image recognition software that detects holes and failed stickers in the Toyota production process using neural networks and OpenCV. Languages and tools: Python, Javascript, OpenCV, YoloV5
+An image recognition software that detects holes and failed stickers in the Toyota production process using neural networks and OpenCV. 
+
+Languages and tools: Python, Javascript, OpenCV, YoloV5
+
 Link: https://colab.research.google.com/drive/1U448IPP_-P75PB83NxzppfkuUijySi_o?usp=sharing
+
 DevPost: https://devpost.com/software/toyota-innovation-challenge
 
 ## Background:
