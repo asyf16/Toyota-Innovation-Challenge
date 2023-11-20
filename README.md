@@ -5,8 +5,6 @@ Languages and tools: Python, Javascript, OpenCV, YoloV5
 
 Link: https://colab.research.google.com/drive/1U448IPP_-P75PB83NxzppfkuUijySi_o?usp=sharing
 
-DevPost: https://devpost.com/software/toyota-innovation-challenge
-
 ## Background:
 
 Toyota is developing a system that will automatically install round stickers over vehicle body holes to prevent damage. The automated system will apply the individual stickers over the designated holes. Our goal is to design an inspection system to: 
