@@ -1,3 +1,5 @@
+https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/eba978f1-0901-42a1-bbad-8e76ce6e5ed7
+
 # Toyota-Innovation-Challenge
 An image recognition software that detects holes and failed stickers in the Toyota production process using neural networks and OpenCV. 
 
@@ -33,8 +35,6 @@ After testing our code on static images, we attempted to connect to a live feed 
 ## Detect stickers: 
 
 We stored the coordinates of the detected circles in an array. If the circle is not symmetric (the length and width are not the same within the margin of error), it is classified as a failed sticker. This works with a live video and in 3 degrees freedom. We then calculate the average radius of all circles, excluding the failed stickers. Circles with a radius less than the average are classified as a hole.
-
-https://github.com/asyf16/Toyota-Innovation-Challenge/assets/144833617/eba978f1-0901-42a1-bbad-8e76ce6e5ed7
 
 ## Detect wrinkles:
 Another challenge is to detect wrinkles in stickers. We are working on using houghLineDetection to find lines during the live stream. We plan to compare the coordinates of the lines found to see if they are inside any of the circles. If the lines are in the circles, the value of a boolean variable “inLine” will change and a "wrinkled" label will display on the screen. Currently, our program is able to find a list of the central coordinates of the wrinkles in the live stream.
